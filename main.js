@@ -1,5 +1,5 @@
 // Modules
-const {app, BrowserWindow, webContents} = require('electron');
+const {app, BrowserWindow, webContents, session} = require('electron');
 const colors = require('colors');
 const bcrypt = require('bcrypt');
 const windowStateKeeper = require('electron-window-state');
@@ -23,6 +23,9 @@ function createWindow () {
     defaultHeight: 800, defaultWidth: 1000
   })
 
+  let defaultSes = session.defaultSession;
+  // let customSes = session.fromPartition('persist:part1')
+
   mainWindow = new BrowserWindow({
     width: winState.width, height: winState.height,
     x: winState.x, y:winState.y,
@@ -34,6 +37,7 @@ function createWindow () {
 
   secondaryWindow = new BrowserWindow({
     width: 340, height: 300,
+    x:600, y:100,
     webPreferences: { nodeIntegration: true },
     // parent: mainWindow,
     // modal: true,
@@ -42,8 +46,22 @@ function createWindow () {
 
   thirdWindow = new BrowserWindow({
     width: 700, height: 500,
-    webPreferences: { nodeIntegration: true },
+    x:750, y:250,
+    webPreferences: { 
+      nodeIntegration: true, 
+      partition: 'persist:part1'
+    },
   })
+
+  let ses = mainWindow.webContents.session;
+  let ses3 = thirdWindow.webContents.session;
+  
+  // console.log('main window session: ', ses)
+  console.log('compare ses1 ses3: ', Object.is(ses, ses3))
+  console.log('compare ses1 default ses: ', Object.is(ses, defaultSes))
+  // console.log('compare custom and default ses: ', Object.is(customSes, defaultSes))
+
+  ses.clearStorageData();
 
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile('index.html') 
