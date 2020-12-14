@@ -1,5 +1,5 @@
 // Modules
-const {app, BrowserWindow, webContents, session} = require('electron');
+const {app, BrowserWindow, webContents, session, dialog} = require('electron');
 const colors = require('colors');
 const bcrypt = require('bcrypt');
 const windowStateKeeper = require('electron-window-state');
@@ -127,6 +127,23 @@ function createWindow () {
 
   wc.on('did-finish-load', () => {
     console.log('content fully loaded')
+    dialog.showOpenDialog({
+      buttonLabel: 'select a photo',
+      defaultPath: app.getPath('desktop')
+    }, filepaths => {
+      console.log(`selected files: ${filepaths}`)
+      console.log()
+    })
+
+    let ans = ['Yes', 'No', 'Ask Later']
+    dialog.showMessageBox({
+      title: ' Message Box',
+      message: 'Please select an answer!',
+      detail: 'lorem lorem lorem lorem lorem lorem lorem lorem lorem',
+      buttons: ans,
+    }, (res) => {
+      console.log(`user selected: ${ans[res]} `)
+    })
   })
   wc.on('dom-ready', () => {
     console.log('DOM ready')
