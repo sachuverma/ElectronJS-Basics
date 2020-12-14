@@ -76,6 +76,26 @@ function createWindow () {
   secondaryWindow.loadURL('https://httpbin.org/basic-auth/user/passwd')
   // secondaryWindow.loadURL('https://github.com')
 
+  defaultSes.on('will-download', (e, downloadItem, webContents) => {
+    console.log('Starting Download');
+    console.log(downloadItem.getFilename());
+    console.log(downloadItem.getTotalBytes());
+
+    downloadItem.setSavePath(app.getPath('desktop') +`/`+downloadItem.getFilename())
+
+    downloadItem.on('updated', (e, state) => {
+      let received = downloadItem.getReceivedBytes()
+
+      if(state === 'progressing' && received){
+        let progress = Math.round((received/downloadItem.getTotalBytes())*100)
+        console.log('progress: ',progress)
+        if(progress > 100) progress = 20
+        webContents.executeJavaScript(`window.progress.value = ${progress}`)
+      }
+    })
+
+  })
+
   secondaryWindow.webContents.on('did-finish-load', (e) => {
     getCookies();
   })
