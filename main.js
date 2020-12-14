@@ -1,5 +1,5 @@
 // Modules
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, webContents} = require('electron');
 const colors = require('colors');
 const bcrypt = require('bcrypt');
 const windowStateKeeper = require('electron-window-state');
@@ -15,7 +15,7 @@ bcrypt.hash('myPlaintextPassword', 10, function(err, hash) {
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow, secondaryWindow
+let mainWindow, secondaryWindow, thirdWindow
 
 // Create a new BrowserWindow when `app` is ready 
 function createWindow () {
@@ -33,19 +33,72 @@ function createWindow () {
   })
 
   secondaryWindow = new BrowserWindow({
-    width: 600, height: 400,
+    width: 340, height: 300,
     webPreferences: { nodeIntegration: true },
     // parent: mainWindow,
     // modal: true,
     show: false
   })
 
+  thirdWindow = new BrowserWindow({
+    width: 700, height: 500,
+    webPreferences: { nodeIntegration: true },
+  })
+
   // Load index.html into the new BrowserWindow
-  mainWindow.loadFile('index.html')
-  secondaryWindow.loadFile('secondary.html')
+  mainWindow.loadFile('index.html') 
+  thirdWindow.loadFile('third.html') 
+  // secondaryWindow.loadFile('secondary.html')
+  secondaryWindow.loadURL('https://httpbin.org/basic-auth/user/passwd')
   // mainWindow.loadURL('https://google.com')
 
   winState.manage(mainWindow)
+
+  let wc = mainWindow.webContents
+  let swc = secondaryWindow.webContents
+  let twc = thirdWindow.webContents
+
+  swc.on('login', (e, req, authInfo, cb) => {
+    console.log('Loggin in...')
+    cb('user', 'passwd')
+  })
+
+  swc.on('did-navigate', (e, url, statusCode, msg) => {
+    console.log(`navigated to url: ${url}, with status code: ${statusCode}`)
+    console.log("message: ", msg)
+  })
+
+  // console.log("AllWebContents: ", webContents.getAllWebContents())
+  wc.on('before-input-event', (e, input) => {
+    console.log(`${input.key}: ${input.type}`)
+  })
+
+  wc.on('new-window', (e, url) => {
+    console.log(`creating new window for ${url}`)
+  })
+
+  wc.on('did-finish-load', () => {
+    console.log('content fully loaded')
+  })
+  wc.on('dom-ready', () => {
+    console.log('DOM ready')
+  })
+
+  twc.on('context-menu', (e, params) => {
+    console.log(`context menu opened on; ${params.mediaTye} ay x:${params.x} y:${params.y}`);
+  })
+
+  twc.on('context-menu', (e, params) => {
+    console.log(`user selected text: ${params.selectionText}`);
+    console.log(`selection can be copied: ${params.editFlags.canCopy}`);
+  })
+
+  twc.on('media-started-playing', () => {
+    console.log('video started');
+  })
+  twc.on('media-paused', () => {
+    console.log('video paused');
+  })
 
   mainWindow.on('focus', () => {
     console.log('Main window focus')
@@ -55,7 +108,8 @@ function createWindow () {
     console.log('Secondary window focus')
   })
 
-  console.log(BrowserWindow.getAllWindows())
+
+  // console.log("AllWindows: ",BrowserWindow.getAllWindows())
 
   // setTimeout(() => {
   //   secondaryWindow.show();
@@ -79,6 +133,10 @@ function createWindow () {
   secondaryWindow.on('closed',  () => {
     mainWindow.maximize();
     secondaryWindow = null
+  })
+
+  thirdWindow.on('closed',  () => {
+    thirdWindow = null
   })
 }
 
