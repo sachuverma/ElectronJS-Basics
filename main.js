@@ -26,6 +26,12 @@ function createWindow () {
   let defaultSes = session.defaultSession;
   // let customSes = session.fromPartition('persist:part1')
 
+  let getCookies = () => {
+    defaultSes.cookies.get({}, (err, cookies) => {
+      console.log("cookies: ", cookies)
+    })
+  }
+  
   mainWindow = new BrowserWindow({
     width: winState.width, height: winState.height,
     x: winState.x, y:winState.y,
@@ -68,7 +74,11 @@ function createWindow () {
   thirdWindow.loadFile('third.html') 
   // secondaryWindow.loadFile('secondary.html')
   secondaryWindow.loadURL('https://httpbin.org/basic-auth/user/passwd')
-  // mainWindow.loadURL('https://google.com')
+  // secondaryWindow.loadURL('https://github.com')
+
+  secondaryWindow.webContents.on('did-finish-load', (e) => {
+    getCookies();
+  })
 
   winState.manage(mainWindow)
 
