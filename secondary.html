@@ -3,33 +3,22 @@
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline'">
-    <title>Hello World!</title>
+    <title>Secondary!</title>
     <style>
       body{
-        background-color: rgb(49, 72, 94);
+        background-color: rgb(49, 94, 63);
         color: white;
         height: 100%;
-        /* user-select: none;
-        -webkit-app-region: drag; */
-      }
-
-      input {
-        -webkit-app-region: no-drag;
       }
     </style>
   </head>
   <body>
-    <h1 style="color: red">Hello World!</h1>
+    <h1 style="color: rgb(211, 202, 150)">Secondary!</h1>
 
     <!-- All of the Node.js APIs are available in this renderer process. -->
     We are using Node.js <strong><script>document.write( process.versions.node)</script></strong>,
     and Electron <strong><script>document.write( process.versions.electron )</script></strong>.
 
-    <br>
-    <br>
-    <br>
-    
-    <input type="range" name="range" id="range" min="0" max="100">
     <script>
       // You can also require other files to run in this process
       require('./renderer.js')

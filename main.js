@@ -3,9 +3,9 @@ const {app, BrowserWindow} = require('electron');
 const colors = require('colors');
 const bcrypt = require('bcrypt');
 
-console.log('checking ready: '+ app.isReady());
+console.log('Checking ready: '+ app.isReady());
 setTimeout(() => {
-  console.log('checking ready: '+ app.isReady());
+  console.log('Checking ready: '+ app.isReady());
 }, 3000);
 
 bcrypt.hash('myPlaintextPassword', 10, function(err, hash) {
@@ -14,34 +14,90 @@ bcrypt.hash('myPlaintextPassword', 10, function(err, hash) {
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow, secondaryWindow
 
-// Create a new BrowserWindow when `app` is ready
+// Create a new BrowserWindow when `app` is ready 
 function createWindow () {
   mainWindow = new BrowserWindow({
     width: 1200, height: 800,
-    webPreferences: { nodeIntegration: true }
+    minWidth: 500, minHeight: 300,
+    webPreferences: { nodeIntegration: true },
+    // frame: false,
+    show: false
+  })
+
+  secondaryWindow = new BrowserWindow({
+    width: 600, height: 400,
+    webPreferences: { nodeIntegration: true },
+    // parent: mainWindow,
+    // modal: true,
+    show: false
   })
 
   // Load index.html into the new BrowserWindow
   mainWindow.loadFile('index.html')
+  secondaryWindow.loadFile('secondary.html')
+  // mainWindow.loadURL('https://google.com')
+
+  mainWindow.on('focus', () => {
+    console.log('Main window focus')
+  })
+
+  secondaryWindow.on('focus', () => {
+    console.log('Secondary window focus')
+  })
+
+  console.log(BrowserWindow.getAllWindows())
+
+  // setTimeout(() => {
+  //   secondaryWindow.show();
+  //   setTimeout(() => {
+  //     secondaryWindow.close();
+  //     secondaryWindow = null;
+  //   }, 2000)
+  // },1000)
+
+  mainWindow.once('ready-to-show', mainWindow.show)
+  secondaryWindow.once('ready-to-show', secondaryWindow.show)
 
   // Open DevTools - Remove for PRODUCTION!
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Listen for window being closed
   mainWindow.on('closed',  () => {
     mainWindow = null
   })
+
+  secondaryWindow.on('closed',  () => {
+    mainWindow.maximize();
+    secondaryWindow = null
+  })
 }
 
-app.on('before-quit', () => {
-  console.log('App is quitting');
+app.on('before-quit', (e) => {
+  console.log('Preventing app from quitting!');
+  e.preventDefault();
+  console.log('command to save user work');
+  app.quit();
+});
+
+app.on('browser-window-blur', () => {
+  console.log('App is unfocused!');
+});
+
+app.on('browser-window-focus', () => {
+  console.log('App is focused!');
 });
 
 // Electron `app` is ready
 app.on('ready', () => {
   console.log('App is ready');
+
+  console.log(app.getPath('desktop'));
+  console.log(app.getPath('music'));
+  console.log(app.getPath('temp'));
+  console.log(app.getPath('userData'));
+
   createWindow();
 })
 
@@ -54,3 +110,4 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (mainWindow === null) createWindow()
 })
+
