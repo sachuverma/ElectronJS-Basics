@@ -2,6 +2,7 @@
 const {app, BrowserWindow} = require('electron');
 const colors = require('colors');
 const bcrypt = require('bcrypt');
+const windowStateKeeper = require('electron-window-state');
 
 console.log('Checking ready: '+ app.isReady());
 setTimeout(() => {
@@ -18,8 +19,13 @@ let mainWindow, secondaryWindow
 
 // Create a new BrowserWindow when `app` is ready 
 function createWindow () {
+  let winState = windowStateKeeper({
+    defaultHeight: 800, defaultWidth: 1000
+  })
+
   mainWindow = new BrowserWindow({
-    width: 1200, height: 800,
+    width: winState.width, height: winState.height,
+    x: winState.x, y:winState.y,
     minWidth: 500, minHeight: 300,
     webPreferences: { nodeIntegration: true },
     // frame: false,
@@ -38,6 +44,8 @@ function createWindow () {
   mainWindow.loadFile('index.html')
   secondaryWindow.loadFile('secondary.html')
   // mainWindow.loadURL('https://google.com')
+
+  winState.manage(mainWindow)
 
   mainWindow.on('focus', () => {
     console.log('Main window focus')
