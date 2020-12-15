@@ -2,6 +2,8 @@
 const electron = require('electron');
 const {app, BrowserWindow, webContents, session, dialog, globalShortcut, Menu, MenuItem, Tray} = electron;
 
+global['myglob'] = 'a variable set in main.js'
+
 const colors = require('colors');
 const bcrypt = require('bcrypt');
 const windowStateKeeper = require('electron-window-state');
@@ -63,7 +65,10 @@ function createWindow () {
     width: winState.width, height: winState.height,
     x: winState.x, y:winState.y,
     minWidth: 500, minHeight: 300,
-    webPreferences: { nodeIntegration: true },
+    webPreferences: { 
+      nodeIntegration: true,
+      enableRemoteModule: true,
+    },
     // frame: false,
     show: false
   })
