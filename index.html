@@ -30,9 +30,13 @@
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ullam, numquam excepturi quis doloribus, molestias repellendus nemo tempore est illo at pariatur vel debitis enim aut nisi reprehenderit. At, veniam.
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ullam, numquam excepturi quis doloribus, molestias repellendus nemo tempore est illo at pariatur vel debitis enim aut nisi reprehenderit. At, veniam.
 
-    <textarea name="tretret" id="tertret" cols="50" rows="15"></textarea>
+    <textarea name="tretret" id="tertret" cols="50" rows="15"></textarea> <br>
 
-    <img src="https://placekitten.com/200/200" alt="img">
+    <img src="https://placekitten.com/300/250" alt="img"> <br>
+    <button onclick="zoomUp()">Increase Zoom</button>
+    <button onclick="zoomDown()">Decrease Zoom</button>
+    <button onclick="zoomReset()">Reset Zoom</button>
+
     <a target="_blank" href="https://placekitten.com/600/600"><h3>View Kitten</h3></a>
     
     <h2><a href="http://placekitten.com/7000/7000" download>Download Kitten</a></h2>
@@ -50,6 +54,21 @@
     <br>
 
     <input type="range" name="range" id="range" min="0" max="100">
+
+    <script>
+      const {webFrame} = require('electron')
+
+      const zoomUp = () => {
+        webFrame.setZoomFactor(webFrame.getZoomFactor()+0.3)
+      }
+      const zoomDown = () => {
+        webFrame.setZoomFactor(webFrame.getZoomFactor()-0.3)
+      }
+      const zoomReset = () => {
+        webFrame.setZoomFactor(1)
+      }
+    </script>
+
     <script>
       // You can also require other files to run in this process
       window.progress = document.getElementById('progress')
