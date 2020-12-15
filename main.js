@@ -1,5 +1,5 @@
 // Modules
-const {app, BrowserWindow, webContents, session, dialog, globalShortcut, Menu, MenuItem} = require('electron');
+const {app, BrowserWindow, webContents, session, dialog, globalShortcut, Menu, MenuItem, Tray} = require('electron');
 
 const colors = require('colors');
 const bcrypt = require('bcrypt');
@@ -16,7 +16,8 @@ bcrypt.hash('myPlaintextPassword', 10, function(err, hash) {
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow, secondaryWindow, thirdWindow
+let mainWindow, secondaryWindow, thirdWindow;
+let tray;
 
 let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
 
@@ -25,12 +26,28 @@ let contextMenu = Menu.buildFromTemplate([
   {role: 'editMenu'}
 ])
 
+let trayMenu = Menu.buildFromTemplate([
+  {label: 'Item 1'},
+  {role: 'quit'}
+])
+
+function createTray(){
+  tray = new Tray('trayTemplate@2x.png');
+  tray.setToolTip('my electron app');
+  tray.on('click', e => {
+    if(e.shiftKey) app.quit();
+    else mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+  })
+  tray.setContextMenu(trayMenu)
+}
 
 // Create a new BrowserWindow when `app` is ready 
 function createWindow () {
   let winState = windowStateKeeper({
     defaultHeight: 800, defaultWidth: 1000
   })
+
+  createTray();
 
   let defaultSes = session.defaultSession;
   // let customSes = session.fromPartition('persist:part1')
