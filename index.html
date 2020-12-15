@@ -23,6 +23,10 @@
     <button id="test-button">TEST BUTTON</button> <br>
     <button id="quit-button">QUIT</button> <br>
 
+    <h4><a href="#" onclick="newWin()">Open Window</a></h4>
+    <h4><a href="#" onclick="closeWin()">Close Window</a></h4>
+    <h4><a href="#" onclick="styleWin()">Bad Fonts</a></h4>
+
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ullam, numquam excepturi quis doloribus, molestias repellendus nemo tempore est illo at pariatur vel debitis enim aut nisi reprehenderit. At, veniam.
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil ullam, numquam excepturi quis doloribus, molestias repellendus nemo tempore est illo at pariatur vel debitis enim aut nisi reprehenderit. At, veniam.
 
@@ -50,6 +54,18 @@
       // You can also require other files to run in this process
       window.progress = document.getElementById('progress')
       require('./renderer.js')
+
+      let win 
+      const newWin = () => {
+        win = window.open('https://electronjs.org', '_blank', 'width=500,height=450,alwaysOnTop=1');
+      }
+      const closeWin = () => {
+        win.close();
+      }
+      const styleWin = () => {
+        win.eval("document.getElementsByTagName('body')[0].style.fontFamily = 'Comic Sans MS'")
+      }
+
     </script>
   </body>
 </html>
