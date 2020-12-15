@@ -20,6 +20,11 @@ let mainWindow, secondaryWindow, thirdWindow
 
 let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
 
+let contextMenu = Menu.buildFromTemplate([
+  {label: 'Item 1'},
+  {role: 'editMenu'}
+])
+
 
 // Create a new BrowserWindow when `app` is ready 
 function createWindow () {
@@ -64,6 +69,9 @@ function createWindow () {
   })
 
   Menu.setApplicationMenu(mainMenu)
+  mainWindow.webContents.on('context-menu', (e) => {
+    contextMenu.popup(mainWindow)
+  })
 
   globalShortcut.register('CommandOrControl+G', () => {
     console.log('User presses G with Ctrl/Command');
