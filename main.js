@@ -1,5 +1,6 @@
 // Modules
-const {app, BrowserWindow, webContents, session, dialog, globalShortcut} = require('electron');
+const {app, BrowserWindow, webContents, session, dialog, globalShortcut, Menu, MenuItem} = require('electron');
+
 const colors = require('colors');
 const bcrypt = require('bcrypt');
 const windowStateKeeper = require('electron-window-state');
@@ -16,6 +17,9 @@ bcrypt.hash('myPlaintextPassword', 10, function(err, hash) {
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow, secondaryWindow, thirdWindow
+
+let mainMenu = Menu.buildFromTemplate(require('./mainMenu'))
+
 
 // Create a new BrowserWindow when `app` is ready 
 function createWindow () {
@@ -58,6 +62,8 @@ function createWindow () {
       partition: 'persist:part1'
     },
   })
+
+  Menu.setApplicationMenu(mainMenu)
 
   globalShortcut.register('CommandOrControl+G', () => {
     console.log('User presses G with Ctrl/Command');
