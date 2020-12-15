@@ -4,6 +4,18 @@
 
 const remote = require('electron').remote
 const { dialog, BrowserWindow, app } = remote
+const { desktopCapturer } = require('electron')
+
+
+document.getElementById('screenshot-button').addEventListener('click', () => {
+  desktopCapturer.getSources({
+    types: ['window'], 
+    thumbnailSize: {width: 400, height: 350}
+  }, (err, sources) => {
+    console.log(`screens: ${sources}`);
+    document.getElementById('screenshot').src = sources[0].thumbnail.toDataURL()
+  })  
+})
 
 const button = document.getElementById('test-button');
 const quitButton = document.getElementById('quit-button');
