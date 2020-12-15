@@ -1,5 +1,6 @@
 // Modules
-const {app, BrowserWindow, webContents, session, dialog, globalShortcut, Menu, MenuItem, Tray} = require('electron');
+const electron = require('electron');
+const {app, BrowserWindow, webContents, session, dialog, globalShortcut, Menu, MenuItem, Tray} = electron;
 
 const colors = require('colors');
 const bcrypt = require('bcrypt');
@@ -93,6 +94,14 @@ function createWindow () {
   globalShortcut.register('CommandOrControl+G', () => {
     console.log('User presses G with Ctrl/Command');
     globalShortcut.unregister('CommandOrControl+G');
+  })
+
+  electron.powerMonitor.on('suspend', e => {
+    console.log('saving data before goind to sleep...')
+  })
+
+  electron.powerMonitor.on('resume', e => {
+    console.log('resumed after sleep...')
   })
 
   let ses = mainWindow.webContents.session;
