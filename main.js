@@ -1,6 +1,6 @@
 // Modules
 const electron = require('electron');
-const {app, BrowserWindow, webContents, session, dialog, globalShortcut, Menu, MenuItem, Tray} = electron;
+const {app, BrowserWindow, webContents, session, dialog, globalShortcut, Menu, MenuItem, Tray, ipcMain} = electron;
 
 global['myglob'] = 'a variable set in main.js'
 
@@ -254,6 +254,16 @@ function createWindow () {
     thirdWindow = null
   })
 }
+
+ipcMain.on('sync-message', (e, args) => {
+  console.log(args);
+  e.returnValue = 'A sync res from main process'
+})
+
+ipcMain.on('channel1', (e, args) => {
+  console.log(args);
+  e.sender.send('channel1-response', 'Message Received on channel 1. THANK YOU!')
+})
 
 app.on('before-quit', (e) => {
   console.log('Preventing app from quitting!');

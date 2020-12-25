@@ -4,8 +4,18 @@
 
 const remote = require('electron').remote
 const { dialog, BrowserWindow, app } = remote
-const { desktopCapturer } = require('electron')
+const { desktopCapturer, ipcRenderer } = require('electron')
 
+
+document.getElementById('talk').addEventListener('click', e => {
+  ipcRenderer.send('channel1', 'Hello from main window')
+  let res = ipcRenderer.sendSync('sync-message', 'Waiting for response!')
+  console.log(res)
+})
+
+ipcRenderer.on('channel1-response', (e, args) => {
+  console.log(args)
+})
 
 document.getElementById('screenshot-button').addEventListener('click', () => {
   desktopCapturer.getSources({
