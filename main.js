@@ -8,6 +8,10 @@ const colors = require('colors');
 const bcrypt = require('bcrypt');
 const windowStateKeeper = require('electron-window-state');
 
+console.log(process.type)
+
+
+
 console.log('Checking ready: '+ app.isReady());
 setTimeout(() => {
   console.log('Checking ready: '+ app.isReady());
@@ -46,6 +50,9 @@ function createTray(){
 
 // Create a new BrowserWindow when `app` is ready 
 function createWindow () {
+  let primaryDisplay = electron.screen.getPrimaryDisplay();
+  console.log(primaryDisplay)
+
   let winState = windowStateKeeper({
     defaultHeight: 800, defaultWidth: 1000
   })
@@ -236,6 +243,8 @@ function createWindow () {
 
   mainWindow.once('ready-to-show', mainWindow.show)
   secondaryWindow.once('ready-to-show', secondaryWindow.show)
+
+  
 
   // Open DevTools - Remove for PRODUCTION!
   // mainWindow.webContents.openDevTools();

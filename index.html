@@ -22,6 +22,7 @@
     <h1 style="color: rgb(100, 45, 45)">Hello World!</h1>
     <button id="test-button">TEST BUTTON</button> <br>
     <button id="quit-button">QUIT</button> <br>
+    <button id="crash-button" onclick="process.crash()">Crash</button> <br>
 
     <h4><a href="#" onclick="newWin()">Open Window</a></h4>
     <h4><a href="#" onclick="closeWin()">Close Window</a></h4>
@@ -79,6 +80,7 @@
 
     <script>
       // You can also require other files to run in this process
+      console.log(process.versions)
       window.progress = document.getElementById('progress')
       require('./renderer.js')
 

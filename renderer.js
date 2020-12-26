@@ -6,6 +6,9 @@ const remote = require('electron').remote
 const { dialog, BrowserWindow, app } = remote
 const { desktopCapturer, ipcRenderer } = require('electron')
 
+const electron = require('electron')
+
+console.log(electron.screen)
 
 document.getElementById('talk').addEventListener('click', e => {
   ipcRenderer.send('channel1', 'Hello from main window')
