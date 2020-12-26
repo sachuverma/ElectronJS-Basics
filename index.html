@@ -23,6 +23,8 @@
     <button id="test-button">TEST BUTTON</button> <br>
     <button id="quit-button">QUIT</button> <br>
     <button id="crash-button" onclick="process.crash()">Crash</button> <br>
+    <button id="shell-button" onclick="showSite()">Launch Electron.js Site</button> <br>
+    <button id="splash-button" onclick="openSplash()">Open Splash.png</button> <br>
 
     <h4><a href="#" onclick="newWin()">Open Window</a></h4>
     <h4><a href="#" onclick="closeWin()">Close Window</a></h4>
@@ -65,7 +67,15 @@
     <input type="range" name="range" id="range" min="0" max="100">
 
     <script>
-      const {webFrame} = require('electron')
+      const {webFrame, shell} = require('electron')
+
+      const showSite = e => {
+        shell.openExternal('https://electronjs.org')
+      }
+
+      const openSplash = e => {
+        shell.showItemInFolder(`${__dirname}/splash.png`)
+      }
 
       const zoomUp = () => {
         webFrame.setZoomFactor(webFrame.getZoomFactor()+0.3)
