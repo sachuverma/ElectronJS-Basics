@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
 const windowStateKeeper = require('electron-window-state');
 
 console.log(process.type)
-
+app.disableHardwareAcceleration()
 
 
 console.log('Checking ready: '+ app.isReady());
@@ -75,6 +75,7 @@ function createWindow () {
     webPreferences: { 
       nodeIntegration: true,
       enableRemoteModule: true,
+      // offscreen: true,
     },
     // frame: false,
     show: false
