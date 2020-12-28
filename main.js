@@ -226,6 +226,8 @@ function createWindow () {
   mainWindow.on('focus', () => {
     console.log('Main window focus')
   })
+  mainWindow.setProgressBar(0.33)
+
 
   secondaryWindow.on('focus', () => {
     console.log('Secondary window focus')
